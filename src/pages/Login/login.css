@@ -1,0 +1,271 @@
+ :root {
+            --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --color-black: #000000;
+            --color-white: #ffffff;
+            --color-light-gray: #F5F5F5;
+            --color-gray: #666666;
+            --color-border: #E0E0E0;
+            --color-google: #DB4437;
+            --color-apple: #000000;
+            --color-wechat: #09B83E;
+            --radius-base: 8px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --space-40: 40px;
+            --space-48: 48px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .login-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+
+        .left-section {
+            background-color: var(--color-black);
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: var(--space-48);
+            padding-left: 80px;
+        }
+
+        .brand-title {
+            color: var(--color-white);
+            font-size: 4.5rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: var(--space-24);
+        }
+
+        .brand-subtitle {
+            color: var(--color-white);
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: var(--space-32);
+        }
+
+        .brand-tagline {
+            color: var(--color-white);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            font-weight: 400;
+            max-width: 400px;
+        }
+
+        .right-section {
+            background-color: var(--color-light-gray);
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: var(--space-48);
+            position: relative;
+        }
+
+        .logo {
+            position: absolute;
+            top: var(--space-40);
+            left: var(--space-40);
+            width: 40px;
+            height: 40px;
+            background-color: var(--color-black);
+            border-radius: var(--radius-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-white);
+        }
+
+        .signup-form {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .signup-heading {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-black);
+            margin-bottom: var(--space-16);
+            text-align: left;
+        }
+
+        .signup-subheading {
+            font-size: 1rem;
+            color: var(--color-gray);
+            margin-bottom: var(--space-40);
+            line-height: 1.5;
+        }
+
+        .email-input {
+            width: 100%;
+            padding: var(--space-16) var(--space-16);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-base);
+            font-size: 1rem;
+            font-family: var(--font-family-base);
+            background-color: var(--color-white);
+            margin-bottom: var(--space-24);
+            transition: border-color 0.2s ease;
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: var(--color-black);
+        }
+
+        .email-input::placeholder {
+            color: var(--color-gray);
+        }
+
+        .next-button {
+            width: 100%;
+            padding: var(--space-16);
+            background-color: var(--color-black);
+            color: var(--color-white);
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: var(--font-family-base);
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            margin-bottom: var(--space-32);
+        }
+
+        .next-button:hover {
+            opacity: 0.9;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--space-32);
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background-color: var(--color-border);
+        }
+
+        .divider-text {
+            padding: 0 var(--space-16);
+            color: var(--color-gray);
+            font-size: 0.9rem;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-40);
+        }
+
+        .social-button {
+            flex: 1;
+            padding: var(--space-12);
+            background-color: var(--color-white);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .social-button:hover {
+            border-color: var(--color-black);
+            transform: translateY(-1px);
+        }
+
+        .social-button.google {
+            color: var(--color-google);
+        }
+
+        .social-button.apple {
+            color: var(--color-apple);
+        }
+
+        .social-button.wechat {
+            color: var(--color-wechat);
+        }
+
+        .footer-text {
+            font-size: 0.85rem;
+            color: var(--color-gray);
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .footer-link {
+            color: var(--color-gray);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .footer-link:hover {
+            color: var(--color-black);
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+
+            .left-section,
+            .right-section {
+                width: 100%;
+                height: 50vh;
+            }
+
+            .left-section {
+                padding: var(--space-32);
+            }
+
+            .brand-title {
+                font-size: 3rem;
+            }
+
+            .brand-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .right-section {
+                padding: var(--space-24);
+            }
+
+            .signup-heading {
+                font-size: 2rem;
+            }
+        }
+
+        @font-face {
+            font-family: 'FKGroteskNeue';
+            src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
+        }
