@@ -4,112 +4,243 @@
     box-sizing: border-box;
 }
 
-/* Base Styling for Header Info */
+/* default styling  */
 
 section {
-    margin-bottom: 80px; 
+    margin-bottom: 49px;
+    border-bottom: solid 2px black;
 }
 
-/* Remove default vertical scrolling if it's the issue. 
-   If your page is long and needs scrolling, you can remove this.
-   If the issue is only horizontal scrolling being visible, keep overflow-x: hidden; */
-/* body, html {
-    overflow-x: hidden;
-} */
 
-
-.info-heading {
-    /* Set to a generic sans-serif if SuisseIntl isn't available */
-    font-family: sans-serif; 
-}
-
-.info-btn:hover {
-    background-color: transparent;
-    border: 1px solid black;
-    color: black;
-}
-
-/* --- Swiper Carousel Styles --- */
-
-.swiper {
+/* ===== HERO BANNER SLIDER ===== */
+.hero-section {
     width: 100%;
-    padding: 80px 0; /* Increased padding to allow active slide to "float" */
-    overflow: visible; /* CRITICAL: Allows the scale/shadow to extend outside the Swiper box */
-}
-
-/* Inactive Slide Styling (Smaller, Blurred, Dim) */
-.swiper-slide {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.5s ease;
-    
-    /* Make inactive slides smaller and visually recessive */
-    transform: scale(0.85); 
-    filter: blur(1.5px);
-    opacity: 0.5;
-
-    /* Set fixed size for consistent scaling */
-    width: 300px; 
-    height: 440px; 
-    padding: 0; 
-}
-
-/* Active Slide Styling (Bigger, Sharp, Prominent) */
-.swiper-slide-active {
-    /* Center slide is bigger and sharp */
-    transform: scale(1.05); /* Slightly bigger than 1 to stand out */
-    filter: blur(0px);
-    opacity: 1;
-    z-index: 10; /* Ensures the active slide overlaps adjacent slides */
-}
-
-
-/* --- Card Styles --- */
-
-.card {
-    width: 100%; 
-    height: 100%;
-    border-radius: 12px; 
-    overflow: hidden;
     background: #fff;
-    text-align: left; 
+}
+
+.info {
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.swiper-wrapper-outer {
     position: relative;
-    border: 1px solid #e0e0e0; /* Subtle border on all cards */
-    box-shadow: none; /* Base card has no shadow */
+    margin-top: 4rem;
+    overflow: hidden; 
 }
 
-/* Apply the distinct shadow/lift ONLY to the card inside the active slide */
-.swiper-slide-active .card {
-    /* Stronger shadow for the active card */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); 
-}
-
-.card img {
-    /* Image takes up the main portion of the card */
+.mySwiper {
     width: 100%;
-    height: 75%; 
-    object-fit: cover;
+    overflow: visible;
+    padding-bottom: 2rem; 
+}
+
+/* slide width control and effects */
+.custom-slide {
+    width: 310px !important;
+    transition: transform 0.6s ease, opacity 0.6s ease, filter 0.6s ease, box-shadow 0.6s ease;
+    opacity: 0.2; 
+    filter: blur(4px); 
+    transform: scale(0.9);
+    pointer-events: none; /* Disable clicks on unfocused slides */
+}
+
+/* active slide scaling + focus */
+.swiper-slide-active {
+    opacity: 1 !important;
+    filter: blur(0) !important;
+    transform: scale(1.05) !important;
+    z-index: 5; 
+    pointer-events: auto; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* next/prev slides slightly visible */
+.swiper-slide-next,
+.swiper-slide-prev {
+    opacity: 0.6 !important;
+    filter: blur(2px) !important;
+    transform: scale(0.95) !important;
+    z-index: 4;
+}
+
+/* --- Card Base Styling --- */
+.card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* --- Image Card Styling --- */
+.image-card-inner img {
+    width: 100%;
     display: block;
+    object-fit: cover;
 }
 
-/* Footer text section (to wrap all text) */
 .card-footer {
-    padding: 10px 15px; /* Padding for text inside the footer area */
-    height: 25%; /* To ensure it fills the bottom 25% */
+    padding: 1rem;
+    text-align: center;
 }
 
-.card h5 {
-    font-size: 14px;
-    font-weight: 600; /* Slightly bolder title */
+.card-footer h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.card-footer p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0;
+}
+
+
+/* --- Comparison Card Styling (The pop-out effect) --- */
+
+.is-comparison-card {
+    position: relative; 
+    z-index: 10;
+    padding: 1.2rem;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); 
+}
+
+/* Key for pop-out effect: set a higher Z-index when it is the active slide */
+.swiper-slide-active .is-comparison-card {
+    z-index: 20; 
+}
+
+.comparison-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee; 
+}
+
+.product-info {
+    display: flex;
+    align-items: flex-start; 
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.product-icon img {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.product-text p {
     margin: 0;
-    color: #333;
     line-height: 1.3;
 }
 
-.card p {
-    font-size: 13px;
-    margin: 5px 0 0; 
-    color: #888; 
-    font-weight: 400;
+.product-text .small-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.product-text .small-desc {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.price-summary {
+    font-size: 0.8rem;
+    color: #333;
+    line-height: 1.4;
+    /* Aligns the summary text below the product name */
+    padding-left: 58px; 
+}
+
+.store-list {
+    flex-grow: 1; 
+}
+
+.store-item {
+    border-top: 1px solid #eee;
+    padding-top: 0.8rem;
+    margin-top: 0.8rem;
+}
+
+.store-logo {
+    width: 28px;
+    height: 28px;
+    background: #333; 
+    color: #fff;
+    border-radius: 4px; 
+    font-size: 0.65rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.store-prices {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.current-price {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #000;
+}
+
+.discount {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: green; 
+    margin-left: 5px;
+}
+
+.original-price {
+    font-size: 0.75rem;
+    color: #aaa;
+    text-decoration: line-through;
+}
+
+.visit-btn {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+}
+
+/* allow full-page scroll */
+html,
+body {
+  overflow-y: auto !important;
+  height: auto !important;
+}
+
+.hero-section {
+  min-height: 100vh;
+  overflow: visible !important;
+}
+
+.mySwiper {
+  overflow: visible !important;
+}
+
+
+/* hover pause visual */
+.swiper:hover .custom-slide {
+    animation-play-state: paused;
+}
+
+/* Media Query for larger screens to give more space */
+@media (min-width: 1200px) {
+    .custom-slide {
+        width: 350px !important;
+    }
 }
