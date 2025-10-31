@@ -6,7 +6,6 @@ import "swiper/css/free-mode";
 import "./heroBanner.css";
 
 // images - keep your imports
-// NOTE: Make sure these paths are correct for your project structure!
 import i1 from "../../assets/Images/i1.png";
 import i2 from "../../assets/Images/i2.png";
 import i3 from "../../assets/Images/i3.png";
@@ -14,7 +13,7 @@ import i4 from "../../assets/Images/i4.png";
 import i5 from "../../assets/Images/i5.png";
 
 export function HeroBanner() {
-  const slides = [
+  const originalSlides = [
     { type: "image", img: i1, title: "Small Leather Gabbi Handbag In Baby Blue", desc: "JW PEI • $155 to $320" },
     { type: "image", img: i2, title: "Medium Vegan Suede Bucket Bag In Neutrals", desc: "Noctrala • $257 to $2700" },
     {
@@ -23,7 +22,7 @@ export function HeroBanner() {
       title: "Florence Baroque Pearl Drop Earrings In Gold",
       desc: "DEAR DARLING",
       stores: [
-        { name: "REVOLVE", price: "$104", discount: "(10% OFF)", originalPrice: "$115", link: "#" },
+        { name: "REVOLVE", price: "$104", discount: "(10% OFF)", originalPrice: "115", link: "#" },
         { name: "MATCHESFASHION", price: "$248", discount: "", originalPrice: "", link: "#" },
         { name: "NET-A-PORTER", price: "$317", discount: "", originalPrice: "", link: "#" },
       ],
@@ -31,6 +30,9 @@ export function HeroBanner() {
     { type: "image", img: i4, title: "Monochrome Gg Rectangle Acetate Sunglasses", desc: "GUCCI • $280 to $307" },
     { type: "image", img: i5, title: "Knee-high Suede Boots With Leather Block Heel In Brown", desc: "VALENTINO GARAVANI • $1574 to $1950" },
   ];
+
+  // FIX: Duplicate the array content multiple times for reliable looping on wide screens
+  const slides = [...originalSlides, ...originalSlides, ...originalSlides];
 
   const renderCardContent = (item) => {
     if (item.type === "image") {
@@ -47,7 +49,7 @@ export function HeroBanner() {
       );
     }
 
-    // Price comparison card with conditional class for CSS styling
+    // Price comparison card
     if (item.type === "comparison") {
       return (
         <div className={`card comparison-card is-comparison-card`}>
@@ -61,7 +63,6 @@ export function HeroBanner() {
                 <p className="small-desc">{item.desc}</p>
               </div>
             </div>
-            {/* Updated price summary text to match the original video */}
             <p className="price-summary">
               Found at <strong>{item.stores.length} stores</strong>, with the lowest price at
               <strong>{item.stores[0].price}</strong> from <strong>{item.stores[0].name}</strong>
@@ -72,7 +73,6 @@ export function HeroBanner() {
             {item.stores.map((store, index) => (
               <div className="store-item d-flex justify-content-between align-items-center" key={index}>
                 <div className="store-details d-flex align-items-center">
-                  {/* Using first two letters of store name for logo placeholder */}
                   <div className="store-logo me-2">{store.name.split(" ").map(w => w[0]).join("").substring(0,2)}</div>
                   <div className="store-prices">
                     <span className="current-price">
@@ -117,11 +117,12 @@ export function HeroBanner() {
               centeredSlides={true}
               slidesPerView={"auto"}
               spaceBetween={32}
-              speed={700} // transition speed (ms)
+              speed={700}
               autoplay={{
-                delay: 1100, // center hold time approx 1.1s to match original pacing
+                delay: 1100, 
                 disableOnInteraction: false,
-                pauseOnMouseEnter: true, // hover pause
+                // FIX: Set to false so the loop does not stop on hover
+                pauseOnMouseEnter: false, 
               }}
               className="mySwiper"
             >

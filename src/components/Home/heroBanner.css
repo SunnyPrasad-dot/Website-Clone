@@ -4,18 +4,27 @@
     box-sizing: border-box;
 }
 
-/* default styling  */
+/* default styling  */
 
 section {
     margin-bottom: 49px;
     border-bottom: solid 2px black;
 }
 
+/* allow full-page scroll */
+html,
+body {
+    overflow-y: auto !important;
+    height: auto !important;
+}
 
 /* ===== HERO BANNER SLIDER ===== */
 .hero-section {
     width: 100%;
     background: #fff;
+    /* Ensure the section takes up at least the viewport height */
+    min-height: 100vh;
+    overflow: visible !important;
 }
 
 .info {
@@ -32,13 +41,14 @@ section {
 
 .mySwiper {
     width: 100%;
-    overflow: visible;
+    overflow: visible !important;
     padding-bottom: 2rem; 
 }
 
 /* slide width control and effects */
 .custom-slide {
-    width: 310px !important;
+    /* ADJUSTED: Smaller base width */
+    width: 260px !important; 
     transition: transform 0.6s ease, opacity 0.6s ease, filter 0.6s ease, box-shadow 0.6s ease;
     opacity: 0.2; 
     filter: blur(4px); 
@@ -50,7 +60,8 @@ section {
 .swiper-slide-active {
     opacity: 1 !important;
     filter: blur(0) !important;
-    transform: scale(1.05) !important;
+    /* ADJUSTED: Reduced scaling for a slightly smaller look */
+    transform: scale(1.0) !important; 
     z-index: 5; 
     pointer-events: auto; 
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
@@ -156,7 +167,6 @@ section {
     font-size: 0.8rem;
     color: #333;
     line-height: 1.4;
-    /* Aligns the summary text below the product name */
     padding-left: 58px; 
 }
 
@@ -216,31 +226,12 @@ section {
     border-radius: 6px;
 }
 
-/* allow full-page scroll */
-html,
-body {
-  overflow-y: auto !important;
-  height: auto !important;
-}
-
-.hero-section {
-  min-height: 100vh;
-  overflow: visible !important;
-}
-
-.mySwiper {
-  overflow: visible !important;
-}
-
-
-/* hover pause visual */
-.swiper:hover .custom-slide {
-    animation-play-state: paused;
-}
+/* hover pause visual: REMOVED as requested (pauseOnMouseEnter: false in JSX) */
 
 /* Media Query for larger screens to give more space */
 @media (min-width: 1200px) {
     .custom-slide {
-        width: 350px !important;
+        /* ADJUSTED: Smaller width for large screens */
+        width: 300px !important;
     }
 }
