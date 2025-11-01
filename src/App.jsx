@@ -1,17 +1,19 @@
-import { Navbar } from "./components/Navbar/navbar"
-import LoginPage from "./pages/Login/login"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./AuthContext";
+import HomePage from "./pages/Home/HomePage";
+import LoginPage from "./components/Login/login";
 
-
-function App() {
-  
+export function App() {
   return (
-    <>
-    
-      <Navbar />
-      
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
-    </>
-  )
 }
 
-export default App
+export default App;

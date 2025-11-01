@@ -1,3 +1,4 @@
+import img from "../../assets/Images/backimg.png";
 import "./ProductCart.css"
 
 export function ProductCart(){
@@ -9,7 +10,7 @@ export function ProductCart(){
             {/* <!-- <div class="container"> --> */}
                 <div class="row">
                     <div class="col-lg-6 m-0">
-                        <img src="images/backimg.png" alt="image" class="img-fluid" width="100%" />
+                        <img src={img} alt="image" class="img-fluid" width="100%" />
                     </div>
                     <div class="col-lg-6 m-0 bg-black">
                         <div class="heading text-start ms-5 mt-4">

@@ -37,15 +37,11 @@ export function HeroBanner() {
   const renderCardContent = (item) => {
     if (item.type === "image") {
       return (
-        <div className="card image-card">
+        <div className="card image-card no-footer">
           <div className="image-card-inner">
             <img src={item.img} alt={item.title} />
           </div>
-          <div className="card-footer">
-            <h5>{item.title}</h5>
-            {item.desc && <p>{item.desc}</p>}
           </div>
-        </div>
       );
     }
 

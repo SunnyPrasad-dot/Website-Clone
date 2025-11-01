@@ -1,0 +1,23 @@
+.top-controls {
+    position: relative;
+}
+.top-controls a {
+    font-size: 20px;
+    padding: 5px 10px;
+}
+.testimonial-card1 {
+    position: relative;
+    overflow: hidden;
+    height: 700px;  
+}
+
+.testimonial-card1 img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover; 
+    display: block;
+}
+
+.info-sec {
+    padding-bottom: 15px;
+}
