@@ -1,0 +1,29 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* default styling  */
+
+section {
+    margin-bottom: 49px;
+    border-bottom: solid 2px black;
+}
+
+.option-con {
+    width: 33%;
+    border-radius: 15px;
+    margin-left: 30%;
+}
+
+.active {
+    background-color: white !important;
+    color: black !important;
+}
+
+.img-info h1 {
+    font-family: SuisseIntl;
+    margin-top: 15%;
+    margin-left: 12%;
+}

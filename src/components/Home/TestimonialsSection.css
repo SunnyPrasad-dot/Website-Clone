@@ -1,0 +1,36 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* default styling  */
+
+section {
+    margin-bottom: 49px;
+    border-bottom: solid 2px black;
+}
+
+.btn-con {
+    position: relative;
+}
+
+
+.top-controls {
+    position: absolute;
+    top: -40px;      
+    right: 0;       
+    display: flex;
+    gap: 10px;
+}
+
+.top  -controls button {
+    background: transparent;
+    border: none;
+}
+
+.top-controls i {
+    font-size: 28px;
+    color: #000;
+    cursor: pointer;
+}

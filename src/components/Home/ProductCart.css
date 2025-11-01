@@ -1,0 +1,22 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* default styling  */
+
+section {
+    margin-bottom: 49px;
+    border-bottom: solid 2px black;
+}
+.md-btn {
+    background-color: white !important;
+    font-weight: bold;
+    text-align: center;
+
+}
+.md-btn:hover{
+    background-color: black !important;
+    color: white !important;
+}

@@ -1,0 +1,61 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* default styling  */
+
+section {
+    margin-bottom: 49px;
+    border-bottom: solid 2px black;
+}
+
+.heading h1 {
+    font-family: SuisseIntl;
+}
+
+/* first line scroll  */
+.logo-slider {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    padding: 20px 0;
+}
+
+.logo-track,.logo-track2 {
+    display: inline-block;
+    animation: scroll 6s linear infinite;
+}
+
+.logo-track img,.logo-track2 img {
+    margin: 0 30px;
+    opacity: 0.9;
+}
+
+/* Infinite smooth scrolling */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Second line scrole  */
+.logo-track2 {
+    display: inline-block;
+    animation: scroll-reverse 12s linear infinite; 
+}
+
+@keyframes scroll-reverse {
+    from {
+        transform: translateX(-100%); 
+    }
+    to {
+        transform: translateX(0);     
+    }
+}
