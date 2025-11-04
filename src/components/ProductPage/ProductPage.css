@@ -1,0 +1,15 @@
+.product-page {
+  display: flex;
+  min-height: 80vh;
+  background: #fff;
+}
+
+.product-page aside {
+  flex: 0 0 250px;
+  border-right: 1px solid #eee;
+  background-color: #f9f9f9;
+}
+
+.product-page .flex-grow-1 {
+  padding: 20px;
+}

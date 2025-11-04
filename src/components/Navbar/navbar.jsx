@@ -265,7 +265,7 @@ function MobileSearchDropdown({ isSearchVisible, toggleSearch }) {
 }
 
 // ---------------------- MAIN NAVBAR ----------------------
-export function Navbar() {
+export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState({});

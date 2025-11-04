@@ -1,0 +1,45 @@
+/* Dark blurred background */
+.modal {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+}
+
+/* Keep modal box solid white */
+.modal-content {
+  background: #fff !important;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1001; /* ensures it sits above blurred layer */
+}
+
+/* Optional subtle entry animation */
+.modal-content {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Ensure backdrop sits below modal */
+.modal-backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+}
+
+/* Image sizing */
+.modal-body img {
+  max-width: 100%;
+  max-height: 350px;
+  object-fit: contain;
+}

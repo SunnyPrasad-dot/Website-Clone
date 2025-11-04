@@ -2,7 +2,7 @@ import i1 from "../../assets/Images/logo2.svg";
 import "./Footer.css"
 
 
-export function Footer(){
+export default function Footer(){
 
     return(
        <>
