@@ -1,99 +1,93 @@
-.category-header-container {
-  background: #fff;
+.category-header {
   padding: 20px 40px;
-  border-bottom: 1px solid #eaeaea;
-  font-family: "Inter", sans-serif;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
 }
 
-/* Breadcrumb */
 .breadcrumb {
-  color: #555;
   font-size: 14px;
-  margin-bottom: 12px;
-}
-.breadcrumb a {
-  text-decoration: none;
-  color: #000;
-}
-.breadcrumb span {
-  margin: 0 6px;
-  color: #777;
-}
-.breadcrumb .active {
-  color: #000;
-  font-weight: 500;
+  color: #666;
+  margin-bottom: 5px;
 }
 
-/* Title and description */
-.page-info h1 {
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 6px;
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 5px 0;
 }
-.page-info p {
-  color: #555;
+
+.page-desc {
   font-size: 15px;
-  margin-bottom: 20px;
+  color: #777;
+  margin-bottom: 15px;
 }
 
-/* Filter bar */
 .filter-bar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background: #f8f8f8;
-  padding: 12px 20px;
-  border-radius: 4px;
+  gap: 12px;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-btn {
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  min-width: 180px;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover,
+.dropdown-item.active {
+  background: #f5f5f5;
+}
+
+.price-dropdown {
+  padding: 10px;
+}
+
+.range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 10px;
 }
-.filter-label {
-  font-weight: 600;
-  margin-right: 10px;
-  color: #222;
-}
-.filter-bar select {
-  margin-right: 10px;
-  padding: 6px 10px;
+
+.range-inputs input {
+  width: 70px;
+  padding: 4px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  background: #fff;
-}
-.filter-bar select:hover {
-  border-color: #000;
+  border-radius: 3px;
 }
 
-/* Reset button */
 .reset-btn {
-  background: none;
-  border: 1px solid #000;
-  padding: 6px 14px;
-  border-radius: 20px;
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: #000;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
-}
-.reset-btn:hover {
-  background: #000;
-  color: #fff;
-}
-
-/* Applied filters */
-.active-filters {
-  margin-top: 8px;
-  font-size: 14px;
-  color: #555;
-}
-.active-filters span {
-  margin: 0 4px;
-  color: #999;
-}
-
-/* Results summary */
-.results-summary {
-  margin-top: 12px;
-  font-size: 15px;
-  color: #333;
 }
