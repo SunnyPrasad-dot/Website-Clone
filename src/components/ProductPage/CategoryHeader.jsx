@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./CategoryHeader.css";
 
-export function CategoryHeader({ resetFilters, onFilterChange }) {
+export function CategoryHeader({ resetFilters, onFilterChange, resetSignal = {} }) {
   const [sale, setSale] = useState("");
   const [category, setCategory] = useState("");
   const [priceRange, setPriceRange] = useState({
@@ -10,6 +10,20 @@ export function CategoryHeader({ resetFilters, onFilterChange }) {
     freeShipping: false,
     freeDuty: false
   });
+
+  useEffect(() => {
+    // Reset local state when resetSignal changes
+    if (resetSignal && Object.keys(resetSignal).length > 0) {
+      setSale("");
+      setCategory("");
+      setPriceRange({
+        min: "",
+        max: "",
+        freeShipping: false,
+        freeDuty: false
+      });
+    }
+  }, [resetSignal]);
 
   useEffect(() => {
     onFilterChange({
@@ -37,15 +51,22 @@ export function CategoryHeader({ resetFilters, onFilterChange }) {
       <div className="filter-bar">
         {/* Sale */}
         <div className="dropdown">
-          <button className="dropdown-btn">Sale</button>
+          {/* Show current selection */}
+          <button className="dropdown-btn">Sale: {sale ? `${sale}% Off` : "All Items"}</button>
           <div className="dropdown-menu">
-            {["10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%"].map((d) => (
+             <div
+                onClick={() => setSale("")} // Reset to all
+                className={`dropdown-item ${sale === "" ? "active" : ""}`}
+              >
+                All Items
+              </div>
+            {["10", "20", "30", "40", "50", "60", "70", "80"].map((d) => ( 
               <div
                 key={d}
-                onClick={() => setSale(d)}
+                onClick={() => setSale(d)} // Sets state to the number string "10", "20", etc.
                 className={`dropdown-item ${sale === d ? "active" : ""}`}
               >
-                {d} Off
+                {d}% Off
               </div>
             ))}
           </div>
@@ -53,8 +74,15 @@ export function CategoryHeader({ resetFilters, onFilterChange }) {
 
         {/* Category */}
         <div className="dropdown">
-          <button className="dropdown-btn">Category</button>
+          {/* Show current selection */}
+          <button className="dropdown-btn">Category: {category || "All"}</button>
           <div className="dropdown-menu">
+             <div
+                onClick={() => setCategory("")} // Reset to all
+                className={`dropdown-item ${category === "" ? "active" : ""}`}
+              >
+                All Categories
+              </div>
             {["Clothing", "Shoes", "Bags", "Accessories", "Beauty", "Home"].map((c) => (
               <div
                 key={c}

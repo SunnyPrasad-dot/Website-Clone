@@ -5,7 +5,7 @@ import "./FilterSidebar.css";
 export default function FilterSidebar({ onFilterChange, resetSignal = {} }) {
   const [localFilters, setLocalFilters] = useState({
     gender: [],
-    category: [],
+    subCategory: [],
     designer: [],
     color: [],
     condition: [],
@@ -18,40 +18,43 @@ export default function FilterSidebar({ onFilterChange, resetSignal = {} }) {
     setLocalFilters((prev) => {
       const updated = { ...prev };
       if (checked) {
+        // Add the value
         updated[filterType] = [...prev[filterType], value];
       } else {
+        // Remove the value
         updated[filterType] = prev[filterType].filter((item) => item !== value);
       }
       return updated;
     });
   };
 
-  // send filter changes to parent
+  // send filter changes to parent (ProductPage)
   useEffect(() => {
     if (onFilterChange) onFilterChange(localFilters);
-  }, [localFilters]);
+  }, [localFilters, onFilterChange]);
 
-  // handle reset signal safely
+  // handle reset signal safely from parent
   useEffect(() => {
-    if (
-      resetSignal &&
-      typeof resetSignal === "object" &&
-      Object.keys(resetSignal).length > 0
-    ) {
-      const allEmpty = Object.values(resetSignal).every(
-        (val) => Array.isArray(val) && val.length === 0
-      );
-      if (allEmpty) {
-        setLocalFilters({
-          gender: [],
-          category: [],
-          designer: [],
-          color: [],
-          condition: [],
-          discount: [],
-          store: [],
-        });
-      }
+    // Check if the array fields in resetSignal are empty, confirming a full reset
+    const arrayFields = ['gender', 'subCategory', 'designer', 'color', 'condition', 'discount', 'store'];
+    const isArrayReset = arrayFields.every(key =>
+      Array.isArray(resetSignal[key]) && resetSignal[key].length === 0
+    );
+
+    // Also check if the string fields are empty
+    const isStringReset = !resetSignal.sale && !resetSignal.category;
+
+    // Trigger local reset if the parent filters are fully reset
+    if (isArrayReset && isStringReset) {
+      setLocalFilters({
+        gender: [],
+        subCategory: [],
+        designer: [],
+        color: [],
+        condition: [],
+        discount: [],
+        store: [],
+      });
     }
   }, [resetSignal]);
 
@@ -67,6 +70,7 @@ export default function FilterSidebar({ onFilterChange, resetSignal = {} }) {
               <label key={g}>
                 <input
                   type="checkbox"
+                  checked={localFilters.gender.includes(g)} // SYNCHRONIZED
                   onChange={(e) =>
                     handleCheckboxChange("gender", g, e.target.checked)
                   }
@@ -79,12 +83,13 @@ export default function FilterSidebar({ onFilterChange, resetSignal = {} }) {
 
           {/* Category */}
           <AccordionItem title="CATEGORY" id="category">
-            {["Skincare", "Hair", "Makeup", "Fragrance", "Body Care"].map((c) => (
+            {["Dresses", "Tops", "Shoes", "Bags", "Accessories", "Jewelry"].map((c) => (
               <label key={c}>
                 <input
                   type="checkbox"
+                  checked={localFilters.subCategory.includes(c)} // SYNCHRONIZED
                   onChange={(e) =>
-                    handleCheckboxChange("category", c, e.target.checked)
+                    handleCheckboxChange("subCategory", c, e.target.checked)
                   }
                 />{" "}
                 {c}
@@ -104,6 +109,7 @@ export default function FilterSidebar({ onFilterChange, resetSignal = {} }) {
               <label key={d}>
                 <input
                   type="checkbox"
+                  checked={localFilters.designer.includes(d)} // SYNCHRONIZED
                   onChange={(e) =>
                     handleCheckboxChange("designer", d, e.target.checked)
                   }
@@ -120,6 +126,7 @@ export default function FilterSidebar({ onFilterChange, resetSignal = {} }) {
               <label key={c}>
                 <input
                   type="checkbox"
+                  checked={localFilters.color.includes(c)} // SYNCHRONIZED
                   onChange={(e) =>
                     handleCheckboxChange("color", c, e.target.checked)
                   }
@@ -136,6 +143,7 @@ export default function FilterSidebar({ onFilterChange, resetSignal = {} }) {
               <label key={cond}>
                 <input
                   type="checkbox"
+                  checked={localFilters.condition.includes(cond)} // SYNCHRONIZED
                   onChange={(e) =>
                     handleCheckboxChange("condition", cond, e.target.checked)
                   }
@@ -152,6 +160,7 @@ export default function FilterSidebar({ onFilterChange, resetSignal = {} }) {
               <label key={off}>
                 <input
                   type="checkbox"
+                  checked={localFilters.discount.includes(off.toString())} // SYNCHRONIZED
                   onChange={(e) =>
                     handleCheckboxChange("discount", off.toString(), e.target.checked)
                   }
@@ -169,6 +178,7 @@ export default function FilterSidebar({ onFilterChange, resetSignal = {} }) {
                 <label key={s}>
                   <input
                     type="checkbox"
+                    checked={localFilters.store.includes(s)} // SYNCHRONIZED
                     onChange={(e) =>
                       handleCheckboxChange("store", s, e.target.checked)
                     }
