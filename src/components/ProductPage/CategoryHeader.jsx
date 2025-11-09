@@ -1,6 +1,5 @@
-// src/components/ProductPage/CategoryHeader.jsx
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "./CategoryHeader.css";
 
 export function CategoryHeader({
@@ -12,7 +11,9 @@ export function CategoryHeader({
   sortBy,
   setSortBy,
 }) {
-  const { category: urlCategory } = useParams();
+  const location = useLocation();
+  const currentPath = location.pathname.replace("/", "").toLowerCase();
+
   const [sale, setSale] = useState("");
   const [category, setCategory] = useState("");
   const [priceRange, setPriceRange] = useState({
@@ -23,7 +24,6 @@ export function CategoryHeader({
   });
 
   useEffect(() => {
-    // Reset local state when resetSignal changes
     if (resetSignal && Object.keys(resetSignal).length > 0) {
       setSale("");
       setCategory("");
@@ -45,14 +45,12 @@ export function CategoryHeader({
       freeShipping: priceRange.freeShipping,
       freeDuty: priceRange.freeDuty,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sale, category, priceRange]);
 
   const handlePriceChange = (field, value) => {
     setPriceRange((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Dynamic content based on category
   const categoryTitles = {
     women: {
       breadcrumb: "ModeSens / Women",
@@ -82,7 +80,11 @@ export function CategoryHeader({
   };
 
   const currentCategory =
-    categoryTitles[urlCategory?.toLowerCase()] || categoryTitles.women;
+    categoryTitles[currentPath] || {
+      breadcrumb: "ModeSens / Products",
+      title: "All Designer Products",
+      desc: "Shop authentic designer items from 800+ stores.",
+    };
 
   return (
     <div className="category-header p-3 border-bottom bg-white">
@@ -100,14 +102,12 @@ export function CategoryHeader({
             placeholder="Search products, brands, descriptions..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            aria-label="Search products"
           />
 
           <select
             className="form-select"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            aria-label="Sort products"
           >
             <option value="">Sort</option>
             <option value="newest">Newest</option>
@@ -116,75 +116,6 @@ export function CategoryHeader({
             <option value="discount">Top Discount</option>
           </select>
         </div>
-      </div>
-
-      <div className="filter-bar mt-3 container-fluid d-flex gap-2 align-items-center">
-        {/* Sale */}
-        <div className="dropdown">
-          <button className="dropdown-btn">Sale: {sale ? `${sale}% Off` : "All Items"}</button>
-          <div className="dropdown-menu">
-            <div onClick={() => setSale("")} className={`dropdown-item ${sale === "" ? "active" : ""}`}>All Items</div>
-            {["10", "20", "30", "40", "50", "60", "70", "80"].map((d) => (
-              <div key={d} onClick={() => setSale(d)} className={`dropdown-item ${sale === d ? "active" : ""}`}>{d}% Off</div>
-            ))}
-          </div>
-        </div>
-
-        {/* Category */}
-        <div className="dropdown">
-          <button className="dropdown-btn">Category: {category || "All"}</button>
-          <div className="dropdown-menu">
-            <div onClick={() => setCategory("")} className={`dropdown-item ${category === "" ? "active" : ""}`}>All Categories</div>
-            {["Clothing", "Shoes", "Bags", "Accessories", "Beauty", "Home"].map((c) => (
-              <div key={c} onClick={() => setCategory(c)} className={`dropdown-item ${category === c ? "active" : ""}`}>{c}</div>
-            ))}
-          </div>
-        </div>
-
-        {/* Price */}
-        <div className="dropdown">
-          <button className="dropdown-btn">Price Range</button>
-          <div className="dropdown-menu price-dropdown">
-            <div className="range-inputs d-flex gap-2">
-              <input
-                type="number"
-                placeholder="Min"
-                className="form-control"
-                value={priceRange.min}
-                onChange={(e) => handlePriceChange("min", e.target.value)}
-              />
-              <input
-                type="number"
-                placeholder="Max"
-                className="form-control"
-                value={priceRange.max}
-                onChange={(e) => handlePriceChange("max", e.target.value)}
-              />
-            </div>
-
-            <label className="d-flex gap-2 align-items-center mt-2">
-              <input
-                type="checkbox"
-                checked={priceRange.freeShipping}
-                onChange={(e) => handlePriceChange("freeShipping", e.target.checked)}
-              />
-              Free Shipping
-            </label>
-
-            <label className="d-flex gap-2 align-items-center">
-              <input
-                type="checkbox"
-                checked={priceRange.freeDuty}
-                onChange={(e) => handlePriceChange("freeDuty", e.target.checked)}
-              />
-              Free Duty
-            </label>
-          </div>
-        </div>
-
-        <button className="btn btn-outline-secondary" onClick={resetFilters}>
-          Reset
-        </button>
       </div>
     </div>
   );

@@ -9,12 +9,9 @@ async function fetchJson(url) {
 }
 
 /**
- * Attempts to fetch product list from known keys.
- * Tries /products.json then root .json as fallback.
- * Returns array of products.
+ * Fetch products from common firebase paths and normalize to array.
  */
 export async function fetchProductsFromFirebase() {
-  // try common path
   const candidates = [
     `${FIREBASE_BASE}/products.json`,
     `${FIREBASE_BASE}/items.json`,
@@ -27,33 +24,24 @@ export async function fetchProductsFromFirebase() {
       const payload = await fetchJson(url);
       if (!payload) continue;
 
-      // If root returned object containing items keyed by id
-      if (Array.isArray(payload)) {
-        return payload;
-      }
+      if (Array.isArray(payload)) return payload;
 
-      // If object with numeric keys or nested objects -> convert to array
       if (typeof payload === "object") {
-        // If there is a top-level "products" key
         if (payload.products && Array.isArray(payload.products)) {
           return payload.products;
         }
-        // payload may be object of objects: { id1: {...}, id2: {...} }
+        // convert keyed object -> array
         const arr = Object.keys(payload).map((k) => {
           const item = payload[k];
-          // attach id if not present
           if (item && typeof item === "object" && !item.id) item.id = k;
           return item;
         });
-        // return non-empty arrays only
         if (arr.length > 0) return arr;
       }
     } catch (e) {
       // try next candidate
-      // console.warn("firebase fetch failed for", url, e);
     }
   }
 
-  // final fallback: empty array
   return [];
 }
