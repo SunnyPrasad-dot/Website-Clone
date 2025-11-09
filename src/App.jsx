@@ -16,7 +16,9 @@ export function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/women" element={<ProductPage />} />
             <Route path="/men" element={<ProductPage />} />
+            <Route path="/kids" element={<ProductPage />} />
             <Route path="/beauty" element={<ProductPage />} />
+            <Route path="/accessories" element={<ProductPage />} />
             {/* you can add other categories here */}
           </Routes>
         </Router>

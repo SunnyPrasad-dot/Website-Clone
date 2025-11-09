@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../AuthContext"; // <-- Added
 import "./navbar.css";
 import "./profile.css"; // <-- Added
@@ -91,7 +91,7 @@ function DropdownMenu({ menuData }) {
   );
 }
 
-// ---------------------- ACTION AREA (Profile Logic Added) ---------------------- 
+// ---------------------- ACTION AREA (Profile Logic Added) ----------------------
 
 function ActionArea({ toggleSearch }) {
   const { isLoggedIn, logout } = useAuth();
@@ -167,9 +167,9 @@ function ActionArea({ toggleSearch }) {
 function BrandLogo() {
   return (
     <div className="navbar-brand">
-      <a href="/">
+      <Link to="/">
         <span className="brand-modesens">MODESENS</span>
-      </a>
+      </Link>
     </div>
   );
 }
@@ -228,7 +228,7 @@ function MobileMenu({ isOpen, toggleMenu, menuData, toggleCategory, expandedCate
                   {expandedCategories[item.name] && renderSubDropdown(item.dropdown)}
                 </>
               ) : (
-                <a href={item.link}>{item.name}</a>
+                <Link to={item.link}>{item.name}</Link>
               )}
             </li>
           ))}
@@ -248,7 +248,7 @@ function MobileSearchDropdown({ isSearchVisible, toggleSearch }) {
   const handleSearchClick = (e) => e.stopPropagation();
 
   return (
-    <div 
+    <div
       className={`mobile-search-dropdown ${isSearchVisible ? 'open' : ''}`}
       onClick={toggleSearch}
     >
@@ -313,7 +313,7 @@ export default function Navbar() {
               className={`navbar-link-item ${item.isSale ? "navbar-link-sale" : ""}`}
               onMouseEnter={() => handleMouseEnter(item.name)}
             >
-              <a href={item.link}>{item.name}</a>
+              <Link to={item.link}>{item.name}</Link>
             </div>
           ))}
         </div>

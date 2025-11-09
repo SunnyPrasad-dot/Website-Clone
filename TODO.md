@@ -1,6 +1,12 @@
-- [x] Rename 'category' key in FilterSidebar to 'subCategory' to avoid conflict with top-bar category filter
-- [x] Update ProductPage.jsx to include subCategory in filters and add matchSubCategory in filtering logic
-- [x] Update ProductGrid.jsx to accept filtered products as props instead of using static productsData
-- [x] Fix CategoryHeader reset functionality by adding resetSignal prop and handling reset
-- [x] Update FilterSidebar categories to match product data (Dresses, Tops, Shoes, Bags, Accessories, Jewelry)
-- [ ] Test the filtering functionality for categories like "Shoes"
+# TODO: Implement Category Filtering Based on Navbar Clicks
+
+## Tasks
+- [ ] Add missing routes in App.jsx for /kids and /accessories
+- [ ] Modify ProductPage.jsx to use useParams for category and set initial filters
+- [ ] Update CategoryHeader.jsx to display dynamic title and breadcrumb based on category
+- [ ] Test filtering by clicking navbar links to ensure only relevant products show
+
+## Notes
+- Use useParams in ProductPage to get category from URL
+- Map URL category to filter gender: e.g., 'women' -> ['Women']
+- Pass category prop to CategoryHeader for dynamic display

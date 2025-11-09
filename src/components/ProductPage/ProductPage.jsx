@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+// src/components/ProductPage/ProductPage.jsx
+import React, { useState, useEffect, useMemo } from "react";
+import { useParams } from "react-router-dom";
 import "./ProductPage.css";
-// NOTE: productsData import assumes path is correct
-import productsData from "../../Data/productsData"; 
+
+import { fetchProductsFromFirebase } from "../../lib/firebase";
 import { CategoryHeader } from "./CategoryHeader";
 import FilterSidebar from "./FilterSidebar";
 import ProductGrid from "./ProductGrid";
@@ -10,29 +12,113 @@ import Navbar from "../Navbar/navbar";
 import Footer from "../Footer/Footer";
 
 export default function ProductPage() {
+  const { category: urlCategory } = useParams();
+
+  const [allProducts, setAllProducts] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
+
   const [filters, setFilters] = useState({
-    sale: "", // Top-bar minimum discount percentage (e.g., "10")
-    category: "", // Top-bar category string (e.g., "Clothing")
+    sale: "", // topbar min discount
+    category: "", // topbar category
     priceMin: "",
     priceMax: "",
     freeShipping: false,
     freeDuty: false,
-    gender: [], // Sidebar multi-select array (e.g., ["Women", "Men"])
-    subCategory: [], // Sidebar subCategory array
+    gender: [], // e.g., ["Women"]
+    subCategory: [],
     designer: [],
     color: [],
     condition: [],
-    discount: [], // Sidebar multi-select min discount array (e.g., ["10", "20"])
-    store: []
+    discount: [], // sidebar discounts
+    store: [],
   });
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState(""); // "", "newest", "price-asc", "price-desc", "discount"
 
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // When sidebar or topbar changes filters
+  // load products once
+  useEffect(() => {
+    let mounted = true;
+    setLoadingProducts(true);
+    fetchProductsFromFirebase()
+      .then((arr) => {
+        if (!mounted) return;
+        // normalize each product a bit
+        const normalized = (arr || []).map((p, idx) => {
+          // ensure required fields exist
+          const priceRaw = p.price ?? p.priceFormatted ?? p.discountedPrice ?? "";
+          const price =
+            typeof priceRaw === "number"
+              ? priceRaw
+              : parseFloat(String(priceRaw).replace(/[^0-9.]/g, "")) || 0;
+
+          const discountPercent =
+            p.discountPercent ??
+            (p.discount
+              ? Number(String(p.discount).replace(/[^0-9]/g, "")) || 0
+              : 0);
+
+          return {
+            // ensure id
+            id: p.id ?? p.key ?? p._id ?? `p_${idx}`,
+            title: p.title ?? p.name ?? "",
+            brand: p.brand ?? p.designer ?? "",
+            image:
+              p.image ??
+              p.imageUrl ??
+              p.thumbnail ??
+              "https://via.placeholder.com/300x300?text=No+Image",
+            price,
+            priceRaw: priceRaw,
+            discountedPrice: p.discountedPrice ?? p.price ?? p.priceRaw ?? price,
+            discountPercent,
+            category: (p.category ?? p.gender ?? p.type ?? "").toString(),
+            color: p.color ?? p.colour ?? "",
+            condition: p.condition ?? "",
+            freeShipping: !!p.freeShipping,
+            freeDuty: !!p.freeDuty,
+            store: p.store ?? "",
+            description: p.description ?? p.desc ?? "",
+            storeCount: p.storeCount ?? 1,
+            ...p,
+          };
+        });
+        setAllProducts(normalized);
+        setLoadingProducts(false);
+      })
+      .catch((err) => {
+        setFetchError(err.message || String(err));
+        setAllProducts([]);
+        setLoadingProducts(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Set initial gender filter based on URL category (women/men/etc.)
+  useEffect(() => {
+    if (urlCategory) {
+      const categoryMap = {
+        women: ["Women"],
+        men: ["Men"],
+        kids: ["Kids"],
+        beauty: ["Beauty"],
+        accessories: ["Accessories"],
+      };
+      const genderFilter = categoryMap[urlCategory.toLowerCase()] || [];
+      setFilters((prev) => ({ ...prev, gender: genderFilter }));
+    }
+  }, [urlCategory]);
+
+  // Handle filter updates from child components
   const handleFilterChange = (newFilters) =>
     setFilters((prev) => ({ ...prev, ...newFilters }));
 
-  // Reset filters
   const handleResetFilters = () =>
     setFilters({
       sale: "",
@@ -47,121 +133,162 @@ export default function ProductPage() {
       color: [],
       condition: [],
       discount: [],
-      store: []
+      store: [],
     });
 
-  // Core filtering logic
-  const filteredProducts = productsData.filter((product) => {
-    
-    // Helper function for array filters (gender, designer, color, etc.)
-    const checkArrayFilter = (filterKey, productPropertyKey) => {
-      const selectedValues = filters[filterKey];
-      
-      // Pass if no filter is selected for this key
-      if (!selectedValues || selectedValues.length === 0) {
-        return true;
-      }
-      
-      const productValue = String(product[productPropertyKey] || "").toLowerCase();
-      
-      // Check if the product's value (e.g., "Dior") matches or is included in ANY of the selected filter values
-      return selectedValues.some(filterVal => {
-        const filterStr = String(filterVal).toLowerCase();
-        
-        // Use 'includes' for broader filtering (e.g., matching "Women" in "Women > Dresses")
-        return productValue.includes(filterStr);
-      });
+  // ---------- filtering logic ----------
+  const filteredProducts = useMemo(() => {
+    if (loadingProducts) return [];
+
+    const f = filters;
+
+    // helper for checking array-based filters
+    const checkArrayFilter = (filterKey, productFieldKey) => {
+      const selected = f[filterKey];
+      if (!selected || selected.length === 0) return true;
+      const prodVal = String((productFieldKey && prod[productFieldKey]) || "")
+        .toLowerCase();
+
+      // We'll implement individually where needed
+      return true;
     };
-    
-    // --- 1. Price Range Logic ---
-    const rawPrice =
-      typeof product.price === "string"
-        ? product.price
-        : String(product.price || "0");
-    const price = parseFloat(rawPrice.replace(/[^0-9.]/g, "")) || 0;
 
-    const withinPrice =
-      (!filters.priceMin || price >= Number(filters.priceMin)) &&
-      (!filters.priceMax || price <= Number(filters.priceMax));
+    const list = allProducts.filter((prod) => {
+      // price
+      const price = Number(prod.price || 0);
+      if (f.priceMin && price < Number(f.priceMin)) return false;
+      if (f.priceMax && price > Number(f.priceMax)) return false;
 
-    // --- 2. Discount/Sale Logic (Combined Top Bar and Sidebar) ---
-    const productDiscount = product.discountPercent || 0;
-    
-    // Get the minimum discount from the Top Bar (e.g., 20)
-    const minTopDiscount = Number(filters.sale) || 0;
-    
-    // Get all minimum discounts from the Sidebar (e.g., [10, 30])
-    const sidebarMinDiscounts = filters.discount.map(Number);
+      // top-bar sale
+      const prodDiscount = Number(prod.discountPercent || 0);
+      if (f.sale && prodDiscount < Number(f.sale)) return false;
 
-    // Combine all required minimum discounts (if multiple are selected, we want the product to satisfy at least one of the sidebar requirements, AND the top-bar requirement if set)
-    
-    // Filter must pass if product discount is >= the minimum set by the top bar
-    const matchTopSale = productDiscount >= minTopDiscount;
+      // sidebar discounts: require product discount >= at least one selected
+      if (f.discount && f.discount.length > 0) {
+        const any = f.discount.some((d) => prodDiscount >= Number(d));
+        if (!any) return false;
+      }
 
-    // Filter must pass if the product discount is >= at least one of the selected sidebar discounts (if any are selected)
-    const matchSidebarDiscount = 
-      sidebarMinDiscounts.length === 0 || 
-      sidebarMinDiscounts.some(min => productDiscount >= min);
+      // top-bar category string match
+      if (f.category) {
+        const cat = String(prod.category || "").toLowerCase();
+        if (!cat.includes(String(f.category).toLowerCase())) return false;
+      }
 
+      // free shipping / duty
+      if (f.freeShipping && !prod.freeShipping) return false;
+      if (f.freeDuty && !prod.freeDuty) return false;
 
-    // --- 3. Top-Bar Category Filter ---
-    const matchTopCategory = 
-      !filters.category || 
-      String(product.category || "")
-        .toLowerCase()
-        .includes(String(filters.category).toLowerCase());
-        
-    // --- 4. Free Shipping/Duty ---
-    // Assuming product data has boolean fields for freeShipping and freeDuty
-    const matchShipping = !filters.freeShipping || product.freeShipping === true;
-    const matchDuty = !filters.freeDuty || product.freeDuty === true;
+      // gender filter (category in product may contain "Women" or "Women > Dresses")
+      if (f.gender && f.gender.length > 0) {
+        const prodCat = String(prod.category || "").toLowerCase();
+        const matchesGender = f.gender.some((g) =>
+          prodCat.includes(String(g).toLowerCase())
+        );
+        if (!matchesGender) return false;
+      }
 
-    // --- 5. Sidebar Array Filters ---
-    const matchGender = checkArrayFilter('gender', 'category');
-    const matchSubCategory = checkArrayFilter('subCategory', 'category');
-    const matchDesigner = checkArrayFilter('designer', 'brand');
-    const matchColor = checkArrayFilter('color', 'color'); // Requires product.color field
-    const matchCondition = checkArrayFilter('condition', 'condition'); // Requires product.condition field
-    const matchStore = checkArrayFilter('store', 'store'); // Requires product.store field
+      // subCategory: check product.category or prod.subCategory or prod.type
+      if (f.subCategory && f.subCategory.length > 0) {
+        const prodCat = String(prod.category || prod.subCategory || "").toLowerCase();
+        if (
+          !f.subCategory.some((sc) =>
+            prodCat.includes(String(sc).toLowerCase())
+          )
+        )
+          return false;
+      }
 
-    // --- Final Check (All must be true) ---
-    return (
-      withinPrice &&
-      matchTopCategory &&
-      matchTopSale &&
-      matchSidebarDiscount &&
-      matchShipping &&
-      matchDuty &&
-      matchGender &&
-      matchSubCategory &&
-      matchDesigner &&
-      matchColor &&
-      matchCondition &&
-      matchStore
-    );
-  });
+      // designer/brand
+      if (f.designer && f.designer.length > 0) {
+        const brand = String(prod.brand || "").toLowerCase();
+        if (!f.designer.some((d) => brand.includes(String(d).toLowerCase())))
+          return false;
+      }
+
+      // color
+      if (f.color && f.color.length > 0) {
+        const color = String(prod.color || "").toLowerCase();
+        if (!f.color.some((c) => color.includes(String(c).toLowerCase())))
+          return false;
+      }
+
+      // condition
+      if (f.condition && f.condition.length > 0) {
+        const cond = String(prod.condition || "").toLowerCase();
+        if (!f.condition.some((c) => cond.includes(String(c).toLowerCase())))
+          return false;
+      }
+
+      // store
+      if (f.store && f.store.length > 0) {
+        const store = String(prod.store || "").toLowerCase();
+        if (!f.store.some((s) => store.includes(String(s).toLowerCase())))
+          return false;
+      }
+
+      // search term
+      if (searchTerm && searchTerm.trim() !== "") {
+        const q = searchTerm.trim().toLowerCase();
+        const hay = (
+          (prod.title || "") +
+          " " +
+          (prod.brand || "") +
+          " " +
+          (prod.description || "") +
+          " " +
+          (prod.category || "")
+        ).toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+
+      return true;
+    });
+
+    // Sorting
+    const sorted = [...list];
+    if (sortBy === "price-asc") {
+      sorted.sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
+    } else if (sortBy === "price-desc") {
+      sorted.sort((a, b) => Number(b.price || 0) - Number(a.price || 0));
+    } else if (sortBy === "discount") {
+      sorted.sort((a, b) => Number(b.discountPercent || 0) - Number(a.discountPercent || 0));
+    } else if (sortBy === "newest") {
+      // assume there is 'createdAt' or fallback to id; newest first
+      sorted.sort((a, b) => {
+        const ta = new Date(a.createdAt || a.created_at || 0).getTime() || 0;
+        const tb = new Date(b.createdAt || b.created_at || 0).getTime() || 0;
+        return tb - ta;
+      });
+    }
+
+    return sorted;
+  }, [allProducts, filters, searchTerm, sortBy, loadingProducts]);
 
   return (
     <>
       <Navbar />
 
-      {/* Top filter bar */}
       <CategoryHeader
         resetFilters={handleResetFilters}
         onFilterChange={handleFilterChange}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
       />
 
       <div className="product-page d-flex">
-        {/* Pass the current filters state as a reset signal to FilterSidebar */}
-        <FilterSidebar 
-            onFilterChange={handleFilterChange} 
-            resetSignal={filters} 
-        />
-        <div className="flex-grow-1">
-          <ProductGrid
-            products={filteredProducts}
-            onQuickView={setSelectedProduct}
-          />
+        <FilterSidebar onFilterChange={handleFilterChange} resetSignal={filters} />
+
+        <div className="flex-grow-1 px-3">
+          {loadingProducts && <div>Loading products...</div>}
+          {fetchError && <div className="text-danger">Error: {fetchError}</div>}
+          {!loadingProducts && filteredProducts.length === 0 && (
+            <div>No products match your filters.</div>
+          )}
+
+          <ProductGrid products={filteredProducts} />
         </div>
       </div>
 
@@ -169,6 +296,7 @@ export default function ProductPage() {
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
       />
+
       <Footer />
     </>
   );
