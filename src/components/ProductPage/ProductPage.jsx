@@ -53,16 +53,16 @@ export default function ProductPage() {
     console.info("[ProductPage] location.pathname:", location.pathname, "params.category:", params?.category);
   }, [location.pathname, params?.category]);
 
-  // Reset filters/search/visible on route category change
+  // Reset filters/search/visible on route change
   useEffect(() => {
-    console.info("[ProductPage] categoryParam changed ->", categoryParam);
+    console.info("[ProductPage] location.pathname changed ->", location.pathname);
     setSelectedBrand("");
     setSearchTerm("");
     setLocalFilters({});
     setVisibleCount(12);
     // ensure page top when navigating categories
     try { window.scrollTo({ top: 0, behavior: "auto" }); } catch (e) {}
-  }, [categoryParam, setSelectedBrand, setSearchTerm]);
+  }, [location.pathname]);
 
   // Reset visible count when filters/search change
   useEffect(() => {

@@ -246,7 +246,7 @@ export default function Navbar() {
     setSearchTerm("");
     setSelectedBrand("");
     setSearchOpen(false);
-    if (location.pathname !== link) navigate(link);
+    navigate(link);
   };
 
   // --- Brand and search handling ---
